@@ -168,6 +168,48 @@ h1 {
 }
 .cta-caption a:hover { text-decoration-color: var(--text); }
 
+/* First-launch Gatekeeper note. The app is self-signed, so macOS blocks
+   the very first open — people need the "Open Anyway" dance exactly once.
+   A native <details> keeps the hero caption to a single line while putting
+   the steps one click away, right at the point of download. No JS: the
+   disclosure chevron is the summary's ::before, swapped via [open]. */
+.install-note {
+  margin: clamp(0.9rem, 2.5vw, 1.2rem) auto 0;
+  max-width: 46ch;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: var(--text-dim);
+}
+.install-note summary {
+  display: inline-block;           /* shrink-wrap so the centred hero centres it */
+  cursor: pointer;
+  list-style: none;                /* hide the UA marker; we draw our own chevron */
+  transition: color 0.2s var(--ease);
+}
+.install-note summary::-webkit-details-marker { display: none; }  /* Safari */
+.install-note summary:hover { color: var(--text); }
+.install-note summary::before { content: "▸  "; }
+.install-note[open] summary::before { content: "▾  "; }
+.install-note ol {
+  margin: 0.9rem 0 0;
+  padding: 1rem 1.4rem 1rem 2.6rem;
+  text-align: left;                /* steps read as a list, not centred poetry */
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+}
+.install-note li + li { margin-top: 0.5em; }
+.install-note li strong { color: var(--text); font-weight: 600; }
+.install-note > p { margin: 0.7rem 0 0; }
+.install-note a {
+  color: var(--text);
+  text-decoration: underline;
+  text-decoration-color: rgba(245, 245, 247, 0.35);
+  text-underline-offset: 2px;
+  transition: text-decoration-color 0.2s var(--ease);
+}
+.install-note a:hover { text-decoration-color: var(--text); }
+
 /* ------------------------------------------------------------
    RECORDING-HUD MOCKUP (signature element)
    Dark-glass pill, deeper than the page cards so it reads as
@@ -432,11 +474,24 @@ footer a:hover { text-decoration-color: var(--text); }
   <p class="tagline">Hold a key, speak, and your words appear at your cursor —
   in any app, without leaving your laptop.</p>
   <a class="cta" href="https://github.com/granthorner-1980/super-chirps-releases/releases/latest/download/SuperChirps.zip">Download for Mac</a>
-  <p class="cta-caption">Free · Apple Silicon (M1+) · macOS 14+<br>
-  (Self-signed app — macOS warns on first launch. Approve it once via
-  System&nbsp;Settings → Privacy&nbsp;&amp;&nbsp;Security → <strong>Open&nbsp;Anyway</strong>;
-  full steps in the
-  <a href="https://github.com/granthorner-1980/super-chirps-releases/releases/latest">install notes</a>.)</p>
+  <p class="cta-caption">Free · Apple Silicon (M1+) · macOS 14+</p>
+
+  <!-- One-time Gatekeeper approval, collapsed by default (see .install-note
+       in the stylesheet for the why). Steps mirror the release notes'
+       walkthrough — keep the two in sync if the flow ever changes. -->
+  <details class="install-note">
+    <summary>First launch: macOS will warn — here’s the 20-second fix</summary>
+    <ol>
+      <li>Open SuperChirps — macOS says it can’t verify the app.
+          Click <strong>Done</strong>.</li>
+      <li>Open <strong>System Settings → Privacy &amp; Security</strong>,
+          scroll to the bottom, and click <strong>Open Anyway</strong>.</li>
+      <li>Confirm once more and you’re in. That’s it, forever — updates
+          install silently, no re-approval.</li>
+    </ol>
+    <p>Full walkthrough with every dialog in the
+    <a href="https://github.com/granthorner-1980/super-chirps-releases/releases/latest">install notes</a>.</p>
+  </details>
 
   <div class="hud" role="img" aria-label="Mockup of the SuperChirps recording overlay showing a live waveform and the word Listening">
     <div class="waveform" aria-hidden="true">
