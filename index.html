@@ -170,9 +170,8 @@ h1 {
 
 /* First-launch Gatekeeper note. The app is self-signed, so macOS blocks
    the very first open — people need the "Open Anyway" dance exactly once.
-   A native <details> keeps the hero caption to a single line while putting
-   the steps one click away, right at the point of download. No JS: the
-   disclosure chevron is the summary's ::before, swapped via [open]. */
+   The steps sit permanently expanded under the download button so nobody
+   has to click through (or read the release page) to discover them. */
 .install-note {
   margin: clamp(0.9rem, 2.5vw, 1.2rem) auto 0;
   max-width: 46ch;
@@ -180,16 +179,7 @@ h1 {
   line-height: 1.6;
   color: var(--text-dim);
 }
-.install-note summary {
-  display: inline-block;           /* shrink-wrap so the centred hero centres it */
-  cursor: pointer;
-  list-style: none;                /* hide the UA marker; we draw our own chevron */
-  transition: color 0.2s var(--ease);
-}
-.install-note summary::-webkit-details-marker { display: none; }  /* Safari */
-.install-note summary:hover { color: var(--text); }
-.install-note summary::before { content: "▸  "; }
-.install-note[open] summary::before { content: "▾  "; }
+.install-note .install-note-title { margin: 0; color: var(--text); }
 .install-note ol {
   margin: 0.9rem 0 0;
   padding: 1rem 1.4rem 1rem 2.6rem;
@@ -476,11 +466,11 @@ footer a:hover { text-decoration-color: var(--text); }
   <a class="cta" href="https://github.com/granthorner-1980/super-chirps-releases/releases/latest/download/SuperChirps.zip">Download for Mac</a>
   <p class="cta-caption">Free · Apple Silicon (M1+) · macOS 14+</p>
 
-  <!-- One-time Gatekeeper approval, collapsed by default (see .install-note
+  <!-- One-time Gatekeeper approval, always on display (see .install-note
        in the stylesheet for the why). Steps mirror the release notes'
        walkthrough — keep the two in sync if the flow ever changes. -->
-  <details class="install-note">
-    <summary>First launch: macOS will warn — here’s the 20-second fix</summary>
+  <div class="install-note">
+    <p class="install-note-title">First launch: macOS will warn — here’s the 20-second fix</p>
     <ol>
       <li>Open SuperChirps — macOS says it can’t verify the app.
           Click <strong>Done</strong>.</li>
@@ -491,7 +481,7 @@ footer a:hover { text-decoration-color: var(--text); }
     </ol>
     <p>Full walkthrough with every dialog in the
     <a href="https://github.com/granthorner-1980/super-chirps-releases/releases/latest">install notes</a>.</p>
-  </details>
+  </div>
 
   <div class="hud" role="img" aria-label="Mockup of the SuperChirps recording overlay showing a live waveform and the word Listening">
     <div class="waveform" aria-hidden="true">
