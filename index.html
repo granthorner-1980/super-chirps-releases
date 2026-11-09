@@ -5,7 +5,19 @@
 <title>SuperChirps — private-first dictation for Mac</title>
 <meta name="description" content="Hold a key, speak, and your words appear at your cursor — transcribed and polished entirely on-device. Free, for Apple Silicon Macs.">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Cg%20fill='%230A84FF'%3E%3Crect%20x='4'%20y='12'%20width='3'%20height='8'%20rx='1.5'/%3E%3Crect%20x='10'%20y='7'%20width='3'%20height='18'%20rx='1.5'/%3E%3Crect%20x='16'%20y='3'%20width='3'%20height='26'%20rx='1.5'/%3E%3Crect%20x='22'%20y='9'%20width='3'%20height='14'%20rx='1.5'/%3E%3Crect%20x='28'%20y='13'%20width='3'%20height='6'%20rx='1.5'/%3E%3C/g%3E%3C/svg%3E">
+<!-- The real app icon (rendered from the app's Icon Composer document,
+     Resources/AppIcon.icon in the private repo) as favicon + touch icon. -->
+<link rel="icon" type="image/png" href="assets/icon-256.png">
+<link rel="apple-touch-icon" href="assets/icon-256.png">
+<!-- Link previews (iMessage, Slack, X, …). og:image must be an absolute URL. -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://granthorner-1980.github.io/super-chirps-releases/">
+<meta property="og:title" content="SuperChirps — private-first dictation for Mac">
+<meta property="og:description" content="Hold a key, speak, and your words appear at your cursor — transcribed and polished entirely on-device. Free, for Apple Silicon Macs.">
+<meta property="og:image" content="https://granthorner-1980.github.io/super-chirps-releases/assets/social-card.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 
 <style>
 /* ============================================================
@@ -19,6 +31,12 @@
   --card-border: rgba(255, 255, 255, 0.10);
   --raw: #0A84FF;                          /* Raw mode blue */
   --polished: #FFD60A;                     /* Polished mode yellow */
+  /* Brand (from the app icon's origami bird): wordmark, Download button, page
+     glows, focus ring. Deliberately separate from --raw/--polished, which stay
+     the *mode* colours (mode cards, and the waveform demo that mirrors the app's
+     blue recording overlay). */
+  --brand: #EA580C;                        /* ember — the bird's deep-orange facets */
+  --brand-gold: #FBBF24;                   /* the bird's beak */
 
   /* Derived */
   --card-hover: rgba(255, 255, 255, 0.085);
@@ -59,14 +77,14 @@ body::before {
   z-index: -1;
   pointer-events: none;
   background:
-    radial-gradient(60% 42% at 22% 0%, rgba(10, 132, 255, 0.16), transparent 70%),
-    radial-gradient(48% 38% at 92% 8%, rgba(255, 214, 10, 0.08), transparent 70%);
+    radial-gradient(60% 42% at 22% 0%, rgba(234, 88, 12, 0.14), transparent 70%),
+    radial-gradient(48% 38% at 92% 8%, rgba(251, 191, 36, 0.07), transparent 70%);
 }
 
 a { color: inherit; }
 
 :focus-visible {
-  outline: 2px solid var(--raw);
+  outline: 2px solid var(--brand);
   outline-offset: 3px;
   border-radius: 4px;
 }
@@ -97,18 +115,27 @@ header {
   padding-block: clamp(4.5rem, 12vw, 8rem) clamp(3.5rem, 8vw, 5.5rem);
 }
 
-/* The wordmark IS the logo (there is none) — set it at true brand-mark
-   scale so the app name owns the page. It stays distinct from the h1
+/* The app icon — the orange origami bird — sits above the wordmark as the
+   brand mark. It's a PNG render of the real Liquid Glass icon, so the page
+   shows exactly what's in the user's Dock. */
+.app-icon {
+  display: block;
+  margin: 0 auto clamp(0.75rem, 2.5vw, 1.25rem);
+  width: clamp(84px, 16vw, 120px);
+  height: auto;
+}
+
+/* The wordmark — set at true brand-mark scale so the app name owns the page. It stays distinct from the h1
    below by role, not just size: heavier weight (800 vs 700), near-normal
-   tracking (vs the h1's tight -0.035em), and the two-tone gradient that
-   ties the Raw-blue / Polished-yellow accents into the name itself. */
+   tracking (vs the h1's tight -0.035em), and the ember-to-gold gradient that
+   carries the icon's colours (bird body → beak) into the name itself. */
 .wordmark {
   margin: 0 0 clamp(1.25rem, 3.5vw, 2rem);
   font-size: clamp(1.7rem, 4.6vw, 2.6rem);
   font-weight: 800;
   letter-spacing: -0.015em;
   line-height: 1;
-  background: linear-gradient(100deg, var(--raw) 15%, var(--polished) 92%);
+  background: linear-gradient(100deg, var(--brand) 10%, var(--brand-gold) 92%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
@@ -136,19 +163,19 @@ h1 {
   display: inline-block;
   margin-top: clamp(2rem, 5vw, 2.75rem);
   padding: 0.85em 1.9em;
-  background: var(--raw);
+  background: var(--brand);
   color: #fff;
   font-size: 1.05rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   text-decoration: none;
   border-radius: 13px;
-  box-shadow: 0 8px 26px rgba(10, 132, 255, 0.38);
+  box-shadow: 0 8px 26px rgba(234, 88, 12, 0.38);
   transition: transform 0.22s var(--ease), box-shadow 0.22s var(--ease);
 }
 .cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 34px rgba(10, 132, 255, 0.5);
+  box-shadow: 0 12px 34px rgba(234, 88, 12, 0.5);
 }
 .cta:active { transform: translateY(0); }
 
@@ -459,6 +486,7 @@ footer a:hover { text-decoration-color: var(--text); }
      1. HERO
      ============================================================ -->
 <header class="shell">
+  <img class="app-icon" src="assets/icon-256.png" width="120" height="120" alt="SuperChirps app icon: an orange origami bird, mid-chirp">
   <p class="wordmark">SuperChirps</p>
   <h1>Private-first dictation for&nbsp;your&nbsp;Mac</h1>
   <p class="tagline">Hold a key, speak, and your words appear at your cursor —
